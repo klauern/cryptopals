@@ -11,10 +11,18 @@ type StringCipherScore struct {
 
 func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
 	var scores []*StringCipherScore
-	for _, line := range lines {
-		scores = append(scores, BestCipherFromString(line))
+	chanScores := make(chan *StringCipherScore, 15)
+	go func() {
+		for _, line := range lines {
+			BestCipherFromString(line, chanScores)
+		}
+	}()
+	for i := 0; i < len(lines); i++ {
+		select {
+		case score := <-chanScores:
+			scores = append(scores, score)
+		}
 	}
-
 	best := scores[0]
 	for _, score := range scores {
 		if score.bestScore > best.bestScore {
@@ -24,7 +32,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
 	return best, nil
 }
 
-func BestCipherFromString(line string) *StringCipherScore {
+func BestCipherFromString(line string, ch chan<- *StringCipherScore) {
 	best := &StringCipherScore{}
 	for _, r16 := range unicode.ASCII_Hex_Digit.R16 {
 		for c := r16.Lo; c <= r16.Hi; c += r16.Stride {
@@ -36,7 +44,7 @@ func BestCipherFromString(line string) *StringCipherScore {
 			best.addCipher(rune(c), []byte(line))
 		}
 	}
-	return best
+	ch <- best
 }
 
 func (best *StringCipherScore) addCipher(c rune, line []byte) {
