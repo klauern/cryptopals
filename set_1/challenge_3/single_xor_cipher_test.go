@@ -1,4 +1,4 @@
-package main
+package challenge_3
 
 import (
 	"encoding/hex"

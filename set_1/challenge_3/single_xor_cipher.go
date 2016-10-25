@@ -1,4 +1,4 @@
-package main
+package challenge_3
 
 import "fmt"
 import "unicode"
@@ -46,7 +46,7 @@ func ScoreWords(phrase string) int {
 	score := 0
 	for _, word := range words {
 		model.TrainWord(word)
-		fmt.Printf("Spell Check for %s is %s\n", word, model.SpellCheck(word))
+		//fmt.Printf("Spell Check for %s is %s\n", word, model.SpellCheck(word))
 		if word == model.SpellCheck(word) {
 			score++
 		}
