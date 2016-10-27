@@ -3,12 +3,17 @@ package main
 import "unicode"
 import "github.com/klauern/cryptopals/set_1/challenge_3"
 
+// StringCipherScore represents a list of scores for a given
+// slice of possibilities
 type StringCipherScore struct {
 	possibilities []string
 	best          string
 	bestScore     int
 }
 
+// DetectSingleCharXor will take a slice of string and find the one among it
+// that contains a decipherable decoding using one Xor operation against
+// a character
 func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
 	var scores []*StringCipherScore
 	chanScores := make(chan *StringCipherScore, 15)
@@ -32,6 +37,8 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
 	return best, nil
 }
 
+// BestCipherFromString will send on the *StringCipherScore channel, the best
+// possible cipher decoding from a given string.
 func BestCipherFromString(line string, ch chan<- *StringCipherScore) {
 	best := &StringCipherScore{}
 	for _, r16 := range unicode.ASCII_Hex_Digit.R16 {
