@@ -16,7 +16,7 @@ type StringCipherScore struct {
 // a character
 func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
 	var scores []*StringCipherScore
-	chanScores := make(chan *StringCipherScore, 15)
+	chanScores := make(chan *StringCipherScore, 5)
 	go func() {
 		for _, line := range lines {
 			BestCipherFromString(line, chanScores)
