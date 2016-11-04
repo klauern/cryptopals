@@ -2,6 +2,7 @@ package main
 
 import "unicode"
 import "github.com/klauern/cryptopals/set_1/challenge_3"
+import "sync"
 
 // StringCipherScore represents a list of scores for a given
 // slice of possibilities
@@ -9,14 +10,15 @@ type StringCipherScore struct {
 	possibilities []string
 	best          string
 	bestScore     int
+	mux           sync.Mutex
 }
 
 // DetectSingleCharXor will take a slice of string and find the one among it
 // that contains a decipherable decoding using one Xor operation against
 // a character
-func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
+func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherScore, error) {
 	var scores []*StringCipherScore
-	chanScores := make(chan *StringCipherScore, 5)
+	chanScores := make(chan *StringCipherScore, 10)
 	for _, line := range lines {
 		go func(line string) {
 			BestCipherFromString(line, chanScores)
@@ -32,7 +34,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, error) {
 			best = score
 		}
 	}
-	return best, nil
+	return best, scores, nil
 }
 
 // BestCipherFromString will send on the *StringCipherScore channel, the best
@@ -55,11 +57,10 @@ func BestCipherFromString(line string, ch chan<- *StringCipherScore) {
 func (best *StringCipherScore) addCipher(c rune, line []byte) {
 	str, score := challenge_3.ScoreCipher(c, line)
 	if score > best.bestScore {
-		best.possibilities = []string{str}
 		best.best = str
 		best.bestScore = score
 	}
-	//	else if score == best.bestScore {
-	//	best.possibilities = append(best.possibilities, str)
-	//}
+	//best.mux.Lock()
+	//best.possibilities = append(best.possibilities, str)
+	//best.mux.Unlock()
 }
