@@ -51,5 +51,5 @@ func ScoreWords(phrase string) int {
 			score++
 		}
 	}
-	return score
+	return score * 100
 }
