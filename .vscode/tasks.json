@@ -6,6 +6,11 @@
     "isShellCommand": true,
     "args": [],
     "showOutput": "always",
+    "options": {
+        "env": {
+            "GOPATH": "/home/klauer/dev/go"           
+        }
+    },
     "tasks": [
         {
             "args": [
