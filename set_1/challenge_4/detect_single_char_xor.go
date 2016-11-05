@@ -2,15 +2,19 @@ package main
 
 import "unicode"
 import "github.com/klauern/cryptopals/set_1/challenge_3"
-import "sync"
 
 // StringCipherScore represents a list of scores for a given
 // slice of possibilities
 type StringCipherScore struct {
-	possibilities []string
-	best          string
-	bestScore     int
-	mux           sync.Mutex
+	best      string
+	bestScore int
+}
+
+func worker(lineIn <-chan string, resultOut chan<- *StringCipherScore) {
+	for line := range lineIn {
+		best := BestCipherFromString(line)
+		resultOut <- best
+	}
 }
 
 // DetectSingleCharXor will take a slice of string and find the one among it
@@ -18,17 +22,27 @@ type StringCipherScore struct {
 // a character
 func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherScore, error) {
 	var scores []*StringCipherScore
-	chanScores := make(chan *StringCipherScore, 10)
-	for _, line := range lines {
-		go func(line string) {
-			BestCipherFromString(line, chanScores)
-		}(line)
+
+	linesCh := make(chan string, 50)
+	resultsCh := make(chan *StringCipherScore, 50)
+
+	// create workers for processing scores
+	for w := 1; w <= 5; w++ {
+		go worker(linesCh, resultsCh)
 	}
+
+	go func(lines []string) {
+		for _, line := range lines {
+			linesCh <- line
+		}
+		close(linesCh)
+	}(lines)
+
+	best := &StringCipherScore{}
 	for range lines {
-		score := <-chanScores
+		score := <-resultsCh
 		scores = append(scores, score)
 	}
-	best := scores[0]
 	for _, score := range scores {
 		if score.bestScore > best.bestScore {
 			best = score
@@ -39,7 +53,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherSco
 
 // BestCipherFromString will send on the *StringCipherScore channel, the best
 // possible cipher decoding from a given string.
-func BestCipherFromString(line string, ch chan<- *StringCipherScore) {
+func BestCipherFromString(line string) *StringCipherScore {
 	best := &StringCipherScore{}
 	for _, r16 := range unicode.ASCII_Hex_Digit.R16 {
 		for c := r16.Lo; c <= r16.Hi; c += r16.Stride {
@@ -51,7 +65,7 @@ func BestCipherFromString(line string, ch chan<- *StringCipherScore) {
 			best.addCipher(rune(c), []byte(line))
 		}
 	}
-	ch <- best
+	return best
 }
 
 func (best *StringCipherScore) addCipher(c rune, line []byte) {
@@ -60,7 +74,4 @@ func (best *StringCipherScore) addCipher(c rune, line []byte) {
 		best.best = str
 		best.bestScore = score
 	}
-	//best.mux.Lock()
-	//best.possibilities = append(best.possibilities, str)
-	//best.mux.Unlock()
 }
