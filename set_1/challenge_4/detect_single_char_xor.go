@@ -51,7 +51,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherSco
 	return best, scores, nil
 }
 
-// BestCipherFromString will send on the *StringCipherScore channel, the best
+// BestCipherFromString return a *StringCipherScore, representing the best
 // possible cipher decoding from a given string.
 func BestCipherFromString(line string) *StringCipherScore {
 	best := &StringCipherScore{}
