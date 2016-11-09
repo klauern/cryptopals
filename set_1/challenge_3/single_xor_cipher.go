@@ -1,19 +1,38 @@
-package challenge_3
+package challenge
 
-import "fmt"
-import "unicode"
-import "github.com/sajari/fuzzy"
-import "strings"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+	"unicode"
 
-var sampleWords []string
+	"github.com/sajari/fuzzy"
+)
+
 var model *fuzzy.Model
 
 func init() {
-	sampleWords = fuzzy.SampleEnglish()
+	//sampleWords = fuzzy.SampleEnglish()
 	model = fuzzy.NewModel()
 	model.SetThreshold(1)
 	model.SetDepth(2)
-	//model.Train(sampleWords)
+	mustLoadDictionary()
+}
+
+func mustLoadDictionary() {
+	file, err := os.Open("my.dict")
+	if err != nil {
+		panic(err)
+	}
+	reader := bufio.NewReader(file)
+	scanner := bufio.NewScanner(reader)
+	scanner.Split(bufio.ScanLines)
+	var words []string
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+	model.Train(words)
 }
 
 // ScoreCipher will produce an overall score of the cipher decryption.  It does this using three checks:
@@ -27,14 +46,16 @@ func ScoreCipher(char rune, encoding []byte) (string, int) {
 	total := 0
 	for i, v := range encoding {
 		dest[i] = v ^ byte(char)
-		if unicode.IsLetter(rune(dest[i])) {
+		r := rune(dest[i])
+		if unicode.In(r, unicode.Letter, unicode.Space) {
 			total++
-		} else if unicode.IsSpace(rune(dest[i])) {
-			total++
+		} else if unicode.IsControl(r) || unicode.IsPunct(r) {
+			total--
 		}
 	}
 	output := fmt.Sprintf("%s", dest)
 	total += ScoreWords(output)
+	//fmt.Println(output)
 	return fmt.Sprintf("%v", output), total
 }
 
@@ -42,10 +63,10 @@ func ScoreCipher(char rune, encoding []byte) (string, int) {
 // spellable words are found within it.  This total is then returned to the
 // caller.
 func ScoreWords(phrase string) int {
-	words := strings.Split(phrase, " ")
+	words := strings.Fields(phrase)
 	score := 0
 	for _, word := range words {
-		model.TrainWord(word)
+		//model.TrainWord(word)
 		//fmt.Printf("Spell Check for %s is %s\n", word, model.SpellCheck(word))
 		if word == model.SpellCheck(word) {
 			score++

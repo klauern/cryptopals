@@ -1,7 +1,10 @@
 package main
 
-import "unicode"
-import "github.com/klauern/cryptopals/set_1/challenge_3"
+import (
+	"unicode"
+
+	challenge "github.com/klauern/cryptopals/set_1/challenge_3"
+)
 
 // StringCipherScore represents a list of scores for a given
 // slice of possibilities
@@ -31,6 +34,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherSco
 		go worker(linesCh, resultsCh)
 	}
 
+	// run a goroutine to pass lines of input to the lineCh channel
 	go func(lines []string) {
 		for _, line := range lines {
 			linesCh <- line
@@ -43,6 +47,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherSco
 		score := <-resultsCh
 		scores = append(scores, score)
 	}
+
 	for _, score := range scores {
 		if score.bestScore > best.bestScore {
 			best = score
@@ -69,7 +74,7 @@ func BestCipherFromString(line string) *StringCipherScore {
 }
 
 func (best *StringCipherScore) addCipher(c rune, line []byte) {
-	str, score := challenge_3.ScoreCipher(c, line)
+	str, score := challenge.ScoreCipher(c, line)
 	if score > best.bestScore {
 		best.best = str
 		best.bestScore = score
