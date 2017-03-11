@@ -1,0 +1,21 @@
+{
+    "memo": "39d4691294df558c38941d30ff30a742daac24d50b78ee9cf31d237dfa899231",
+    "projects": [
+        {
+            "name": "github.com/pkg/errors",
+            "branch": "master",
+            "revision": "bfd5150e4e41705ded2129ec33379de1cb90b513",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/sajari/fuzzy",
+            "branch": "master",
+            "revision": "243c923763cac789d1196949a834ca698dbd7a28",
+            "packages": [
+                "."
+            ]
+        }
+    ]
+}
