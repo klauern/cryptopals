@@ -55,7 +55,6 @@ func ScoreCipher(char rune, encoding []byte) (string, int) {
 	}
 	output := fmt.Sprintf("%s", dest)
 	total += ScoreWords(output)
-	//fmt.Println(output)
 	return fmt.Sprintf("%v", output), total
 }
 
