@@ -25,8 +25,8 @@ func TestFindSingleCharXor(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error getting best score: %v", err)
 	}
-	fmt.Printf("Best Score: %d\nBest Score's Line: %s\nBest from Each Line: \n", score.bestScore, score.best)
+	fmt.Printf("Best Score: %d\nBest Score's Line: %s\nBest from Each Line: \n", score.score, score.line)
 	for _, v := range all {
-		fmt.Println(v.best)
+		fmt.Println(v.line)
 	}
 }

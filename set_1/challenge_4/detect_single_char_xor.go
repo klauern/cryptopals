@@ -9,8 +9,8 @@ import (
 // StringCipherScore represents a list of scores for a given
 // slice of possibilities
 type StringCipherScore struct {
-	best      string
-	bestScore int
+	line  string
+	score int
 }
 
 func worker(lineIn <-chan string, resultOut chan<- *StringCipherScore) {
@@ -49,7 +49,7 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherSco
 	}
 
 	for _, score := range scores {
-		if score.bestScore > best.bestScore {
+		if score.score > best.score {
 			best = score
 		}
 	}
@@ -75,8 +75,8 @@ func BestCipherFromString(line string) *StringCipherScore {
 
 func (best *StringCipherScore) addCipher(c rune, line []byte) {
 	str, score := challenge.ScoreCipher(c, line)
-	if score > best.bestScore {
-		best.best = str
-		best.bestScore = score
+	if score > best.score {
+		best.line = str
+		best.score = score
 	}
 }
