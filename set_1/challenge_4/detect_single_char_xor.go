@@ -1,8 +1,6 @@
 package main
 
 import (
-	"unicode"
-
 	challenge "github.com/klauern/cryptopals/set_1/challenge_3"
 )
 
@@ -60,16 +58,42 @@ func DetectSingleCharXor(lines []string) (*StringCipherScore, []*StringCipherSco
 // possible cipher decoding from a given string.
 func BestCipherFromString(line string) *StringCipherScore {
 	best := &StringCipherScore{}
-	for _, r16 := range unicode.ASCII_Hex_Digit.R16 {
-		for c := r16.Lo; c <= r16.Hi; c += r16.Stride {
-			best.addCipher(rune(c), []byte(line))
-		}
+	byteLine := []byte(line)
+
+	for i := uint16(0); i <= 0x255; i++ {
+		best.addCipher(rune(i), byteLine)
 	}
-	for _, r32 := range unicode.ASCII_Hex_Digit.R32 {
-		for c := r32.Lo; c <= r32.Hi; c += r32.Stride {
-			best.addCipher(rune(c), []byte(line))
-		}
-	}
+
+	// best.AddCipherFromRuneRange(unicode.ASCII_Hex_Digit.R16, byteLine)
+	// best.AddCipherFromRuneRange(unicode.Punct.R16, byteLine)
+	// best.AddCipherFromRuneRange(unicode.White_Space.R16, byteLine)
+	// best.AddCipherFromRuneRange(unicode.Letter.R16, byteLine)
+	// best.AddCipherFromRuneRange(unicode.Common.R16, byteLine)
+	// best.AddCipherFromRuneRange(unicode.Digit.R16, byteLine)
+	// best.AddCipherFromRuneRange(unicode.Other_Alphabetic.R16, byteLine)
+
+	// for _, r16 := range unicode.ASCII_Hex_Digit.R16 {
+	// 	for c := r16.Lo; c <= r16.Hi; c += r16.Stride {
+	// 		fmt.Printf("%v", rune(c))
+	// 		best.addCipher(rune(c), byteLine)
+	// 	}
+	// }
+	// for _, r32 := range unicode.ASCII_Hex_Digit.R32 {
+	// for c := r32.Lo; c <= r32.Hi; c += r32.Stride {
+	// fmt.Printf("%v", rune(c))
+	// best.addCipher(rune(c), byteLine)
+	// }
+	// }
+	// for _, l := range unicode.Letter.R16 {
+	// for c := l.Lo; c <= l.Hi; c += l.Stride {
+	// best.addCipher(rune(c), byteLine)
+	// }
+	// }
+	// for _, l := range unicode.Letter.R32 {
+	// 	for c := l.Lo; c <= l.Hi; c += l.Stride {
+	// 		best.addCipher(rune(c), byteLine)
+	// 	}
+	// }
 	return best
 }
 
