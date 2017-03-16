@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"encoding/hex"
 )
 
 // RepeatingKeyXOR performs a repeating-key XOR  using the input
@@ -9,11 +9,13 @@ import (
 func RepeatingKeyXOR(key, input []byte) string {
 	var inProgress []byte
 	for i := 0; i < len(input); i++ {
-		ch := key[i%len(key)] ^ input[i]
+		idx := i % len(key)
+		// fmt.Printf("i is %v, with ary[idx] being %d and val %v\n", i, idx, string(key[idx]))
+		ch := input[i] ^ key[idx]
 		inProgress = append(inProgress, ch)
 	}
-	fmt.Printf("%v", inProgress)
-	return string(inProgress)
+	// fmt.Printf("String: %v\n", hex.EncodeToString(inProgress))
+	return hex.EncodeToString(inProgress)
 }
 
 func main() {}
