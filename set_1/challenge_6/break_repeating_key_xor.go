@@ -1,13 +1,16 @@
-package main
+package challenge6
 
-// HammingDistance calculates the distance of two strings based on
-// an assumed KEYSIZE value and two strings for comparison.  It returns
-// the overall distance as an average.
-func HammingDistance(keysize int, from, to string) int {
+import "github.com/steakknife/hamming"
+
+// HammingDistance calculates the distance of two strings based two strings for comparison.
+// It returns the overall distance as an average.
+func HammingDistance(from, to string) int {
 	// take the first keysize of bytes against the second keysize of bytes
-	var dist = make([]byte, len(from))
+	var dist = make([]int, len(from))
+	var tot int
 	for i := range from {
-		dist[i] = from[i] - to[i]
+		dist[i] = hamming.Byte(from[i], to[i])
+		tot += hamming.Byte(from[i], to[i])
 	}
-	return 0
+	return tot
 }
