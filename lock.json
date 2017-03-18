@@ -1,10 +1,10 @@
 {
-    "memo": "39d4691294df558c38941d30ff30a742daac24d50b78ee9cf31d237dfa899231",
+    "memo": "c54b1d5c22c521ed5d7afd6565310b4b326ab195d810635984ce9df7ac1c4622",
     "projects": [
         {
             "name": "github.com/pkg/errors",
             "branch": "master",
-            "revision": "bfd5150e4e41705ded2129ec33379de1cb90b513",
+            "revision": "ff09b135c25aae272398c51a07235b90a75aa4f0",
             "packages": [
                 "."
             ]
@@ -13,6 +13,14 @@
             "name": "github.com/sajari/fuzzy",
             "branch": "master",
             "revision": "243c923763cac789d1196949a834ca698dbd7a28",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/steakknife/hamming",
+            "version": "0.2.3",
+            "revision": "5ac3f73b8842df21423978fbbeb5166670f6f73e",
             "packages": [
                 "."
             ]

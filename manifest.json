@@ -5,6 +5,9 @@
         },
         "github.com/sajari/fuzzy": {
             "branch": "master"
+        },
+        "github.com/steakknife/hamming": {
+            "version": ">=0.2.3, <1.0.0"
         }
     }
 }
