@@ -4,8 +4,8 @@ import "testing"
 
 func TestHammingDistance(t *testing.T) {
 	type args struct {
-		from string
-		to   string
+		from []byte
+		to   []byte
 	}
 	tests := []struct {
 		name string
@@ -14,7 +14,7 @@ func TestHammingDistance(t *testing.T) {
 	}{
 		{
 			"proceeding test",
-			args{"this is a test", "wokka wokka!!!"},
+			args{[]byte("this is a test"), []byte("wokka wokka!!!")},
 			37,
 		},
 	}
